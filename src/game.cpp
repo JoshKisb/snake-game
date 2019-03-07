@@ -75,9 +75,10 @@ void Game::processEvents()
                     case sf::Keyboard::Left: snakeKey = SnakeEvent::LEFT; break;
                     case sf::Keyboard::Right: snakeKey = SnakeEvent::RIGHT; break;
                     case sf::Keyboard::Escape: closeGame(); break;
+                    default: break;
                 }
             }
-            break;
+            default: break;
         }
     }
     EventSystem::fire(snakeKey);
