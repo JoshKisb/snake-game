@@ -16,6 +16,8 @@ class Snake
         void moveLeft();
         void moveRight();
         bool eat(sf::RectangleShape& food);
+        bool checkCollision(sf::Vector2f);
+        sf::Vector2f getPosition();
 
     private:
         std::vector<sf::RectangleShape> m_tail;
@@ -24,7 +26,6 @@ class Snake
         unsigned int m_total = 0;
 
         sf::Vector2f nextPosition();
-        bool checkCollision();
 };
 
 #endif // SNAKE_H

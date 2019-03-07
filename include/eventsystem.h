@@ -8,21 +8,18 @@
 typedef std::function<void()> Callbackfn;
 
 enum class SnakeEvent {
-    UP, DOWN, LEFT, RIGHT
+    UP, DOWN, LEFT, RIGHT, NONE
 };
 
 class EventSystem
 {
     public:
-        EventSystem();
-        virtual ~EventSystem();
         static void addListerner(SnakeEvent e, Callbackfn fn);
         static void fire(SnakeEvent e);
-
     private:
-        std::map<SnakeEvent, std::vector<Callbackfn>> m_listeners;
-
-        static EventSystem* sInstance;
+        EventSystem();
+        virtual ~EventSystem();
+        static std::map<SnakeEvent, std::vector<Callbackfn>> m_listeners;
 };
 
 #endif // EVENTSYSTEM_H

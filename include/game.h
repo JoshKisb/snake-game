@@ -1,12 +1,16 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <iostream>
+
 #include <SFML/Graphics.hpp>
 #include "snake.h"
 #include "eventsystem.h"
 
 #define DIMEN 600
-const float cellsize = DIMEN/24;
+#define GRID 24
+
+const float cellsize = DIMEN/GRID;
 
 class Game
 {
@@ -14,13 +18,14 @@ class Game
         Game();
         virtual ~Game();
         void run();
+        void closeGame();
 
     private:
         sf::RenderWindow window;
-        EventSystem eventSystem;
 
         Snake snake;
         sf::RectangleShape food;
+        SnakeEvent snakeKey;
 
         void processEvents();
         void generateFood();
