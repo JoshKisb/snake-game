@@ -1,11 +1,11 @@
 #include "game.h"
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
 
 Game::Game():
-    window(sf::VideoMode(DIMEN, DIMEN), "Snake Game"),
-    food({cellsize, cellsize})
+    window(sf::VideoMode(DIMEN, DIMEN), "Snake Game", sf::Style::Close),
+    food({cellsize, cellsize}),
+    snakeKey(SnakeEvent::NONE)
 {
     window.setFramerateLimit(8);
     window.setKeyRepeatEnabled(false);
@@ -33,12 +33,12 @@ void Game::run()
 
         window.clear(sf::Color(58, 88, 98));
 
+        snake.update(deltaTime);
 
         if (snake.eat(food)) {
             generateFood();
         }
 
-        snake.update(deltaTime);
         snake.draw(window);
         window.draw(food);
         // Update the window
@@ -46,30 +46,40 @@ void Game::run()
     }
 }
 
-void Game::generateFood()
-{
-    float posX = (std::rand() % 24) * cellsize;
-    float posY = (std::rand() % 24) * cellsize;
-
-    food.setPosition(posX, posY);
+void Game::closeGame(){
+    window.close();
 }
 
+void Game::generateFood()
+{
+    sf::Vector2f pos;
+    do {
+        pos = {(std::rand() % GRID) * cellsize, (std::rand() % GRID) * cellsize};
+    } while(snake.checkCollision(pos) || pos == snake.getPosition());
+
+    food.setPosition(pos);
+}
 
 
 void Game::processEvents()
 {
     sf::Event event;
     while (window.pollEvent(event)) {
-        if (event.type == sf::Event::Closed)
-            window.close();
+        switch(event.type){
+            case sf::Event::Closed:
+                window.close();break;
+            case sf::Event::KeyPressed:{
+                switch(event.key.code){
+                    case sf::Keyboard::Up: snakeKey = SnakeEvent::UP; break;
+                    case sf::Keyboard::Down: snakeKey = SnakeEvent::DOWN; break;
+                    case sf::Keyboard::Left: snakeKey = SnakeEvent::LEFT; break;
+                    case sf::Keyboard::Right: snakeKey = SnakeEvent::RIGHT; break;
+                    case sf::Keyboard::Escape: closeGame(); break;
+                }
+            }
+            break;
+        }
     }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        EventSystem::fire(SnakeEvent::UP);
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        EventSystem::fire(SnakeEvent::DOWN);
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        EventSystem::fire(SnakeEvent::LEFT);
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        EventSystem::fire(SnakeEvent::RIGHT);
+    EventSystem::fire(snakeKey);
+    snakeKey = SnakeEvent::NONE;
 }

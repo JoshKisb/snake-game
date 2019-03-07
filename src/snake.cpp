@@ -35,18 +35,8 @@ sf::Vector2f Snake::nextPosition()
 
     headPos += m_velocity;
 
-    if (headPos.x >= DIMEN) {
-        headPos.x = 0;
-    }
-    if (headPos.x < 0) {
-        headPos.x = DIMEN - cellsize;
-    }
-    if (headPos.y >= DIMEN) {
-        headPos.y = 0;
-    }
-    if (headPos.y < 0) {
-        headPos.y = DIMEN - cellsize;
-    }
+    headPos.x = (headPos.x >= DIMEN ? 0 : (headPos.x < 0 ? DIMEN - cellsize : headPos.x)); //wrap horizontal
+    headPos.y = (headPos.y >= DIMEN ? 0 : (headPos.y < 0 ? DIMEN - cellsize : headPos.y)); //wrap vertical
 
     return headPos;
 }
@@ -54,10 +44,9 @@ sf::Vector2f Snake::nextPosition()
 
 bool Snake::eat(sf::RectangleShape& food)
 {
-    sf::Vector2f foodPos = food.getPosition();
-    sf::Vector2f nextPos = nextPosition();
+    sf::Vector2f foodPos = food.getPosition(), headPos = m_head.getPosition();
 
-    if (nextPos == foodPos) {
+    if (headPos == foodPos) {
         m_total++;
         return true;
     }
@@ -65,13 +54,18 @@ bool Snake::eat(sf::RectangleShape& food)
     return false;
 }
 
-bool Snake::checkCollision()
+bool Snake::checkCollision(sf::Vector2f pos)
 {
     for (sf::RectangleShape& cell: m_tail) {
-        if (m_head.getPosition() == cell.getPosition())
+        if (pos == cell.getPosition())
             return true;
     }
     return false;
+}
+
+sf::Vector2f Snake::getPosition()
+{
+    return m_head.getPosition();
 }
 
 
@@ -88,8 +82,7 @@ void Snake::update(float deltaTime)
     } else {
         if (m_total > 0) {
             for (unsigned int i = 0; i + 1 < m_total; i++) {
-                sf::Vector2f pos = m_tail.at(i + 1).getPosition();
-                m_tail.at(i).setPosition(pos);
+                m_tail.at(i).setPosition(m_tail.at(i + 1).getPosition());
             }
             m_tail.back().setPosition(headPos);
         }
@@ -97,7 +90,7 @@ void Snake::update(float deltaTime)
 
     m_head.setPosition(nextPosition());
 
-    if (checkCollision()) {
+    if (checkCollision(m_head.getPosition())) {
         m_tail.clear();
         m_total = 0;
     }
