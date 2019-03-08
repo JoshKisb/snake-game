@@ -14,12 +14,13 @@ enum class SnakeEvent {
 class EventSystem
 {
     public:
+        EventSystem();
+        virtual ~EventSystem();
         static void addListerner(SnakeEvent e, Callbackfn fn);
         static void fire(SnakeEvent e);
     private:
-        EventSystem();
-        virtual ~EventSystem();
-        static std::map<SnakeEvent, std::vector<Callbackfn>> m_listeners;
+        std::map<SnakeEvent, std::vector<Callbackfn>> m_listeners;
+        static EventSystem* sInstance;
 };
 
 #endif // EVENTSYSTEM_H

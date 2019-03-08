@@ -22,6 +22,7 @@ class Game
 
     private:
         sf::RenderWindow window;
+        EventSystem eventSystem;
 
         Snake snake;
         sf::RectangleShape food;
