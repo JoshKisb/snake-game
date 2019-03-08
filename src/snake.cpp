@@ -35,8 +35,18 @@ sf::Vector2f Snake::nextPosition()
 
     headPos += m_velocity;
 
-    headPos.x = (headPos.x >= DIMEN ? 0 : (headPos.x < 0 ? DIMEN - cellsize : headPos.x)); //wrap horizontal
-    headPos.y = (headPos.y >= DIMEN ? 0 : (headPos.y < 0 ? DIMEN - cellsize : headPos.y)); //wrap vertical
+    if (headPos.x >= DIMEN) {
+        headPos.x = 0;
+    }
+    else if (headPos.x < 0) {
+        headPos.x = DIMEN - cellsize;
+    }
+    else if (headPos.y >= DIMEN) {
+        headPos.y = 0;
+    }
+    else if (headPos.y < 0) {
+        headPos.y = DIMEN - cellsize;
+    }
 
     return headPos;
 }
@@ -44,7 +54,8 @@ sf::Vector2f Snake::nextPosition()
 
 bool Snake::eat(sf::RectangleShape& food)
 {
-    sf::Vector2f foodPos = food.getPosition(), headPos = m_head.getPosition();
+    sf::Vector2f headPos = m_head.getPosition();
+    sf::Vector2f foodPos = food.getPosition(); 
 
     if (headPos == foodPos) {
         m_total++;
