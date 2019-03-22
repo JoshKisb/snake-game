@@ -1,0 +1,7 @@
+before_script:
+        - apt update -qq && apt install -y -qq meson
+
+build:
+        script:
+                - meson builddir && cd builddir
+                - ninja
