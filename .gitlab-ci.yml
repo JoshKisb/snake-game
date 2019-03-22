@@ -1,5 +1,5 @@
 before_script:
-        - apt update -qq && apt install -y -qq meson
+        - apt update -qq && apt install -y -qq meson libsfml-dev
 
 build:
         script:
