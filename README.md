@@ -4,7 +4,7 @@ Simple C++ Sfml Snake Game
 
 ## Demo 
 
-![Snake Game Image](https://i.imgur.com/dbPfqPk.png)
+![Snake Game Image](https://raw.githubusercontent.com/JoshKisb/snake-game/master/snake_demo.png)
 
 ## Compiling 
 
